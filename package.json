@@ -1,7 +1,8 @@
 {
   "name": "genapp",
   "version": "0.0.0",
-  "description": "A customizable generator application using fgen.",
+  "description": "Customizable generator application using fgen.",
+  "preferGlobal": true,
   "bin": {
     "gen": "./bin/genapp",
     "gen.bat": "./bin/genapp.bat"

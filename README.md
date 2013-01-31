@@ -2,8 +2,6 @@
 
 A customizable generator application using fgen.
 
-In order to generate files, you need to provide a folder of templates and a context object to fgen, and fgen will generate the appropriate folder structures and files. fgen can be used as the core engine of any generator software.
-
 ## Installation
 
 ```bash
