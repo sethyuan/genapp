@@ -1,0 +1,38 @@
+{
+  "name": "genapp",
+  "version": "0.0.0",
+  "description": "A customizable generator application using fgen.",
+  "bin": {
+    "gen": "./bin/genapp",
+    "gen.bat": "./bin/genapp.bat"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sethyuan/genapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sethyuan/genapp/issues",
+    "email": "cavingdeep@gmail.com"
+  },
+  "keywords": [
+    "generate",
+    "generator",
+    "template",
+    "engine",
+    "project",
+    "mustache",
+    "hogan"
+  ],
+  "author": {
+    "name": "Seth Yuan",
+    "email": "cavingdeep@gmail.com"
+  },
+  "engines": {
+    "node": ">=0.6"
+  },
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "fgen": "~0.2.0"
+  }
+}
