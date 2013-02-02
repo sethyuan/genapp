@@ -4,8 +4,7 @@
   "description": "Customizable generator application using fgen.",
   "preferGlobal": true,
   "bin": {
-    "gen": "./bin/genapp",
-    "gen.bat": "./bin/genapp.bat"
+    "gen": "./genapp.js",
   },
   "repository": {
     "type": "git",
@@ -34,6 +33,7 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "dependencies": {
-    "fgen": "~0.2.0"
+    "fgen": "~0.2.0",
+    "optimist": "~0.3.5"
   }
 }
