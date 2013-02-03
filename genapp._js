@@ -9,7 +9,7 @@ var fgen = require("fgen"),
              "$0 set --all [-o output_dir] [--exclude=regex]")
       .alias("o", "output")
       .alias("h", "help")
-      .default("o", ".")
+      .default("o", "./")
       .describe("o", "A destination file/folder where you want to generate to.")
       .describe("all", "Generate all files, excluding those specified by 'exclude'.")
       .describe("exclude", "a regular expression pattern to exclude from generation.")
@@ -138,21 +138,28 @@ Object.keys(context.context).forEach_(_, function(_, key) {
   constructContext(key, context.context[key], realContext, null, _);
 });
 rl.close();
-
 context.postProcess(realContext);
 
-if (argv.all) {
-  // Generate all files.
-  gen = fgen.createGenerator(templates[argv._[0]], _);
-  gen.context = realContext;
-  if (argv.exclude != null) {
-    gen.generateAll(argv.output, function(key) {
-      return !(new RegExp(argv.exclude)).test(key);
-    }, _);
+try {
+  if (argv.all) {
+    // Generate all files.
+    gen = fgen.createGenerator(templates[argv._[0]], _);
+    gen.context = realContext;
+    if (argv.exclude != null) {
+      gen.generateAll(argv.output, function(key) {
+        return !(new RegExp(argv.exclude)).test(key);
+      }, _);
+    } else {
+      gen.generateAll(argv.output, _);
+    }
   } else {
-    gen.generateAll(argv.output, _);
+    // Generate single file.
+    gen = fgen.createGenerator(templates[argv._[0]], _);
+    gen.context = realContext;
+    gen.generate(argv._[1], argv.output, _);
   }
   console.log("done.");
-} else {
-  // Generate single file.
+} catch (e) {
+  console.log();
+  console.log(e.message);
 }
