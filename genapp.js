@@ -151,27 +151,27 @@
 
 
                     rl.close();
-                    context.postProcess(realContext); return (function ___(__then) { (function ___(_) { __tryCatch(_, function __$main() { return (function __$main(__then) {
+                    return context.postProcess(realContext, __cb(_, __frame, 152, 0, function __$main() { return (function ___(__then) { (function ___(_) { __tryCatch(_, function __$main() { return (function __$main(__then) {
 
 
-                            if (argv.all) {
+                              if (argv.all) {
 
-                              return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 157, 10, function ___(__0, __9) { gen = __9;
-                                gen.context = realContext; return (function __$main(__then) {
-                                  if ((argv.exclude != null)) {
-                                    return gen.generateAll(argv.output, function(key) {
-                                      return !(new RegExp(argv.exclude)).test(key); }, __cb(_, __frame, 160, 6, __then, true)); } else {
-
-
-                                    return gen.generateAll(argv.output, __cb(_, __frame, 164, 6, __then, true)); } ; })(__then); }, true)); } else {
+                                return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 157, 10, function ___(__0, __9) { gen = __9;
+                                  gen.context = realContext; return (function __$main(__then) {
+                                    if ((argv.exclude != null)) {
+                                      return gen.generateAll(argv.output, function(key) {
+                                        return !(new RegExp(argv.exclude)).test(key); }, __cb(_, __frame, 160, 6, __then, true)); } else {
 
 
+                                      return gen.generateAll(argv.output, __cb(_, __frame, 164, 6, __then, true)); } ; })(__then); }, true)); } else {
 
-                              return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 168, 10, function ___(__0, __10) { gen = __10;
-                                gen.context = realContext;
-                                return gen.generate(argv._[1], argv.output, __cb(_, __frame, 170, 4, __then, true)); }, true)); } ; })(function __$main() {
 
-                            console.log("done."); __then(); }); }); })(function ___(e, __result) { __tryCatch(_, function __$main() { if (e) {
 
-                            console.log();
-                            console.log(e.message); __then(); } else { _(null, __result); } ; }); }); })(function ___() { __tryCatch(_, _); }); }, true), function __3(_, key) { var __frame = { name: "__3", line: 149 }; return __func(_, this, arguments, __3, 0, __frame, function __$__3() { return constructContext(key, context.context[key], realContext, null, __cb(_, __frame, 1, 2, _, true)); }); }); }); }); }); }, true), function __1(_, root) { var __frame = { name: "__1", line: 45 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { if (!fs.existsSync(root)) { return _(null); } ; return fs.readdir(root, __cb(_, __frame, 3, 2, function ___(__0, __2) { return __2.filter_(__cb(_, __frame, 4, 2, function ___(__0, __3) { __3.forEach(function(folder) { if (!((/^__/.test(folder) || ((folder in templates))))) { templates[folder] = path.join(root, folder); }; }); _(); }, true), -1, function __1(_, file) { var __frame = { name: "__1", line: 49 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs.stat(path.join(root, file), __cb(_, __frame, 1, 13, function ___(__0, __2) { var __1 = __2.isDirectory(); return _(null, __1); }, true)); }); }); }, true)); }); }); }); }); }, true)); });}).call(this, __trap);
+                                return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 168, 10, function ___(__0, __10) { gen = __10;
+                                  gen.context = realContext;
+                                  return gen.generate(argv._[1], argv.output, __cb(_, __frame, 170, 4, __then, true)); }, true)); } ; })(function __$main() {
+
+                              console.log("done."); __then(); }); }); })(function ___(e, __result) { __tryCatch(_, function __$main() { if (e) {
+
+                              console.log();
+                              console.log(e.message); __then(); } else { _(null, __result); } ; }); }); })(function ___() { __tryCatch(_, _); }); }, true)); }, true), function __3(_, key) { var __frame = { name: "__3", line: 149 }; return __func(_, this, arguments, __3, 0, __frame, function __$__3() { return constructContext(key, context.context[key], realContext, null, __cb(_, __frame, 1, 2, _, true)); }); }); }); }); }); }, true), function __1(_, root) { var __frame = { name: "__1", line: 45 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { if (!fs.existsSync(root)) { return _(null); } ; return fs.readdir(root, __cb(_, __frame, 3, 2, function ___(__0, __2) { return __2.filter_(__cb(_, __frame, 4, 2, function ___(__0, __3) { __3.forEach(function(folder) { if (!((/^__/.test(folder) || ((folder in templates))))) { templates[folder] = path.join(root, folder); }; }); _(); }, true), -1, function __1(_, file) { var __frame = { name: "__1", line: 49 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs.stat(path.join(root, file), __cb(_, __frame, 1, 13, function ___(__0, __2) { var __1 = __2.isDirectory(); return _(null, __1); }, true)); }); }); }, true)); }); }); }); }); }, true)); });}).call(this, __trap);

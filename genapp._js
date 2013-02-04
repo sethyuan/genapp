@@ -150,7 +150,7 @@ Object.keys(context.context).forEach_(_, function(_, key) {
   constructContext(key, context.context[key], realContext, null, _);
 });
 rl.close();
-context.postProcess(realContext);
+context.postProcess(realContext, _);
 
 try {
   if (argv.all) {

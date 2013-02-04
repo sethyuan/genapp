@@ -11,29 +11,23 @@ exports.context = {
     { keyword: "" }
   ],
   user: {
-    name: (function() {
-      var userName;
-      exec("git config --get user.name", function(err, stdout, stderr) {
-        userName = (err ? "" : stdout.trim());
-      });
-      return function() {
-        return userName;
-      };
-    }()),
-    email: (function() {
-      var email;
-      exec("git config --get user.email", function(err, stdout, stderr) {
-        email = (err ? "" : stdout.trim());
-      });
-      return function() {
-        return email;
-      };
-    }())
+    name: function() {},
+    email: function() {}
   }
 };
 
-exports.postProcess = function(context) {
+exports.postProcess = function(context, callback) {
   if (context.keywords && context.keywords.length > 0) {
     context.keywords[context.keywords.length - 1].last = true;
   }
+
+  // Because of exec's async nature, we have to call them here.
+  // Hogan does not support async lambdas.
+  exec("git config --get user.name", function(err, stdout, stderr) {
+    context.user.name = (err ? "" : stdout.trim());
+    exec("git config --get user.email", function(err, stdout, stderr) {
+      context.user.email = (err ? "" : stdout.trim());
+      callback();
+    });
+  });
 };
