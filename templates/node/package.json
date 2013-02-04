@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sethyuan/{{name}}.git"
+    "url": "https://github.com/{{user.name}}/{{name}}.git"
   },
   "bugs": {
-    "url": "https://github.com/sethyuan/{{name}}/issues",
-    "email": "cavingdeep@gmail.com"
+    "url": "https://github.com/{{user.name}}/{{name}}/issues",
+    "email": "{{user.email}}"
   },
   "keywords": [
   {{#keywords}}
@@ -20,8 +20,8 @@
   {{/keywords}}
   ],
   "author": {
-    "name": "Seth Yuan",
-    "email": "cavingdeep@gmail.com"
+    "name": "{{user.name}}",
+    "email": "{{user.email}}"
   },
   "engines": {
     "node": ">=0.6"

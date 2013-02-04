@@ -41,7 +41,7 @@ if (userOptions) {
     .concat(options.roots);
 }
 
-// Load the sets.
+// Load bundles.
 options.roots.forEach_(_, function(_, root) {
   if (!fs.existsSync(root)) return;
 
@@ -50,16 +50,20 @@ options.roots.forEach_(_, function(_, root) {
       return fs.stat(path.join(root, file), _).isDirectory();
     })
     .forEach(function(folder) {
-      if (!(folder in templates)) templates[folder] = path.join(root, folder);
+      if (!(/^__/.test(folder) || (folder in templates))) templates[folder] = path.join(root, folder);
     });
 });
 
 // Report bundle not found error if any.
 if (!(argv._[0] in templates)) {
-  console.log("Bundle '%s' does not exist in your current roots configuration.\n" +
-              "Your current roots are:", argv._[0]);
-  for (var i = 0; i < options.roots.length; i++) {
-    console.log(options.roots[i]);
+  if (/^__/.test(argv._[0])) {
+    console.log("Bundle names cannot start with '__', please choose a different name.");
+  } else {
+    console.log("Bundle '%s' does not exist in your current roots configuration.\n" +
+                "Your current roots are:", argv._[0]);
+    for (var i = 0; i < options.roots.length; i++) {
+      console.log(options.roots[i]);
+    }
   }
   process.exit(1);
 }
@@ -68,7 +72,7 @@ contextFile = path.join(templates[argv._[0]], "..", argv._[0] + ".js");
 try {
   context = require(contextFile);
 } catch (ex) {
-  console.log("Cannot read set %s's context file.", argv._[0]);
+  console.log("Cannot read bundle '%s' context file.", argv._[0]);
   process.exit(1);
 }
 
@@ -98,6 +102,12 @@ constructContext = function(key, val, ctx, prefix, _) {
     ctx[key].length = ctx[key].length - 1;
   } else if (typeof(val) === "function") {
     ctx[key] = val;
+  } else if (typeof(val) === "object" && val !== null) {
+    item = {};
+    ctx[key] = item;
+    Object.keys(val).forEach_(_, function(_, k) {
+      constructContext(k, val[k], item, key, _);
+    });
   } else if (val != null) {
     type = typeof(val);
     switch (type) {
