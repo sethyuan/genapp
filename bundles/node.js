@@ -23,6 +23,7 @@ exports.context = {
   keywords: [
     { keyword: "" }
   ],
+  json: function() { return "json" },
   user: {
     name: null,
     email: null
