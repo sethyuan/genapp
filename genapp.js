@@ -14,7 +14,7 @@
 
 
 
-    argv = optimist.usage(("$0 set file [-o output]\n" + "$0 set --all [-o output_dir] [--exclude=regex]")).alias("o", "output").alias("h", "help").default("o", ".").describe("o", "A destination file/folder where you want to generate to.").describe("all", "Generate all files, excluding those specified by 'exclude'.").describe("exclude", "a regular expression pattern to exclude from generation.").argv;
+    argv = optimist.usage(("gen set file [-o output]\n" + "gen set --all [-o output_dir] [--exclude=regex]")).alias("o", "output").alias("h", "help").default("o", "./").describe("o", "A destination file/folder where you want to generate to.").describe("all", "Generate all files, excluding those specified by 'exclude'.").describe("exclude", "a regular expression pattern to exclude from generation.").argv;
     templates = { }; return (function __$main(_) { return (function __$main(_) {
 
 
@@ -85,12 +85,14 @@
                           console.log(util.format("ctrl+c to quit '%s'", key));
                           rl.once("SIGINT", function() {
                             more = false;
+                            rl.write(null, { ctrl: true, name: "u" });
+                            rl.write(null, { ctrl: true, name: "k" });
                             rl.write("\n"); }); return (function ___(__break) { var __more; var __loop = __cb(_, __frame, 0, 0, function __$constructContext__2() { __more = false;
 
                               var __5 = more; if (__5) {
                                 item = { };
                                 ctx[key].push(item);
-                                return Object.keys(val[0]).forEach_(__cb(_, __frame, 13, 6, function __$constructContext__2() { while (__more) { __loop(); }; __more = true; }, true), function __1(_, k) { var __frame = { name: "__1", line: 92 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() {
+                                return Object.keys(val[0]).forEach_(__cb(_, __frame, 15, 6, function __$constructContext__2() { while (__more) { __loop(); }; __more = true; }, true), function __1(_, k) { var __frame = { name: "__1", line: 94 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() {
                                     return constructContext(k, val[0][k], item, key, __cb(_, __frame, 1, 8, _, true)); }); }); } else { __break(); } ; }); do { __loop(); } while (__more); __more = true; })(function __$constructContext__2() {
 
 
@@ -100,28 +102,28 @@
                                 if ((val != null)) {
                                   type = typeof (val); return (function __$constructContext__2(__break) {
                                     switch (type) {
-                                    case "string": return question(((((prefix ? (prefix + "> ") : "")) + key) + "? "), __cb(_, __frame, 24, 15, function ___(__0, __2) {
+                                    case "string": return question(((((prefix ? (prefix + "> ") : "")) + key) + "? "), __cb(_, __frame, 26, 15, function ___(__0, __2) {
                                         answer = __2; ctx[key] = answer;
                                         return __break(); }, true));
 
-                                    case "number": return question(((((prefix ? (prefix + "> ") : "")) + key) + "? (number)"), __cb(_, __frame, 28, 15, function ___(__0, __3) {
+                                    case "number": return question(((((prefix ? (prefix + "> ") : "")) + key) + "? (number)"), __cb(_, __frame, 30, 15, function ___(__0, __3) {
                                         answer = __3; number = parseInt(answer);
                                         return (function __$constructContext__2(__then) { if (isNaN(number)) {
                                             console.log("It's not number.");
-                                            return constructContext(key, val, ctx, prefix, __cb(_, __frame, 32, 8, __then, true));
+                                            return constructContext(key, val, ctx, prefix, __cb(_, __frame, 34, 8, __then, true));
                                           } else { ctx[key] = number;
 
                                             __then(); } ; })(__break); }, true));
 
 
-                                    case "boolean": return question(((((prefix ? (prefix + "> ") : "")) + key) + "? (yes/no)"), __cb(_, __frame, 38, 15, function ___(__0, __4) {
+                                    case "boolean": return question(((((prefix ? (prefix + "> ") : "")) + key) + "? (yes/no)"), __cb(_, __frame, 40, 15, function ___(__0, __4) {
                                         answer = __4.toLowerCase(); return (function __$constructContext__2(__then) { if ((answer === "yes")) {
                                             ctx[key] = true;
                                             __then(); } else { return (function __$constructContext__2(__then) { if ((answer === "no")) {
                                                 ctx[key] = false;
                                                 __then(); } else { console.log("yes or no please.");
 
-                                                return constructContext(key, val, ctx, prefix, __cb(_, __frame, 45, 8, __then, true));
+                                                return constructContext(key, val, ctx, prefix, __cb(_, __frame, 47, 8, __then, true));
                                               } ; })(__then); } ; })(__break); }, true)); default: return __break(); }; })(__then); } else { __then(); } ; })(__then); } ; })(__then); } ; })(_); }); };
 
 
@@ -135,22 +137,31 @@
 
 
                   realContext = { };
-                  return Object.keys(context.context).forEach_(__cb(_, __frame, 136, 0, function __$main() {
+                  return Object.keys(context.context).forEach_(__cb(_, __frame, 138, 0, function __$main() {
 
 
                     rl.close();
-
-                    context.postProcess(realContext); return (function __$main(__then) {
-
-                      if (argv.all) {
-
-                        return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 145, 8, function ___(__0, __8) { gen = __8;
-                          gen.context = realContext; return (function __$main(__then) {
-                            if ((argv.exclude != null)) {
-                              return gen.generateAll(argv.output, function(key) {
-                                return !(new RegExp(argv.exclude)).test(key); }, __cb(_, __frame, 148, 4, __then, true)); } else {
+                    context.postProcess(realContext); return (function ___(__then) { (function ___(_) { __tryCatch(_, function __$main() { return (function __$main(__then) {
 
 
-                              return gen.generateAll(argv.output, __cb(_, __frame, 152, 4, __then, true)); } ; })(function __$main() {
+                            if (argv.all) {
 
-                            console.log("done."); __then(); }); }, true)); } else { __then(); } ; })(_); }, true), function __3(_, key) { var __frame = { name: "__3", line: 137 }; return __func(_, this, arguments, __3, 0, __frame, function __$__3() { return constructContext(key, context.context[key], realContext, null, __cb(_, __frame, 1, 2, _, true)); }); }); }); }); }); }, true), function __1(_, root) { var __frame = { name: "__1", line: 45 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { if (!fs.existsSync(root)) { return _(null); } ; return fs.readdir(root, __cb(_, __frame, 3, 2, function ___(__0, __2) { return __2.filter_(__cb(_, __frame, 4, 2, function ___(__0, __3) { __3.forEach(function(folder) { if (!((folder in templates))) { templates[folder] = path.join(root, folder); }; }); _(); }, true), -1, function __1(_, file) { var __frame = { name: "__1", line: 49 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs.stat(path.join(root, file), __cb(_, __frame, 1, 13, function ___(__0, __2) { var __1 = __2.isDirectory(); return _(null, __1); }, true)); }); }); }, true)); }); }); }); }); }, true)); });}).call(this, __trap);
+                              return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 147, 10, function ___(__0, __8) { gen = __8;
+                                gen.context = realContext; return (function __$main(__then) {
+                                  if ((argv.exclude != null)) {
+                                    return gen.generateAll(argv.output, function(key) {
+                                      return !(new RegExp(argv.exclude)).test(key); }, __cb(_, __frame, 150, 6, __then, true)); } else {
+
+
+                                    return gen.generateAll(argv.output, __cb(_, __frame, 154, 6, __then, true)); } ; })(__then); }, true)); } else {
+
+
+
+                              return fgen.createGenerator(templates[argv._[0]], __cb(_, __frame, 158, 10, function ___(__0, __9) { gen = __9;
+                                gen.context = realContext;
+                                return gen.generate(argv._[1], argv.output, __cb(_, __frame, 160, 4, __then, true)); }, true)); } ; })(function __$main() {
+
+                            console.log("done."); __then(); }); }); })(function ___(e, __result) { __tryCatch(_, function __$main() { if (e) {
+
+                            console.log();
+                            console.log(e.message); __then(); } else { _(null, __result); } ; }); }); })(function ___() { __tryCatch(_, _); }); }, true), function __3(_, key) { var __frame = { name: "__3", line: 139 }; return __func(_, this, arguments, __3, 0, __frame, function __$__3() { return constructContext(key, context.context[key], realContext, null, __cb(_, __frame, 1, 2, _, true)); }); }); }); }); }); }, true), function __1(_, root) { var __frame = { name: "__1", line: 45 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { if (!fs.existsSync(root)) { return _(null); } ; return fs.readdir(root, __cb(_, __frame, 3, 2, function ___(__0, __2) { return __2.filter_(__cb(_, __frame, 4, 2, function ___(__0, __3) { __3.forEach(function(folder) { if (!((folder in templates))) { templates[folder] = path.join(root, folder); }; }); _(); }, true), -1, function __1(_, file) { var __frame = { name: "__1", line: 49 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs.stat(path.join(root, file), __cb(_, __frame, 1, 13, function ___(__0, __2) { var __1 = __2.isDirectory(); return _(null, __1); }, true)); }); }); }, true)); }); }); }); }); }, true)); });}).call(this, __trap);

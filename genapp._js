@@ -5,8 +5,8 @@ var fgen = require("fgen"),
     readline = require("readline"),
     optimist = require("optimist"),
     argv = optimist
-      .usage("$0 set file [-o output]\n" +
-             "$0 set --all [-o output_dir] [--exclude=regex]")
+      .usage("gen set file [-o output]\n" +
+             "gen set --all [-o output_dir] [--exclude=regex]")
       .alias("o", "output")
       .alias("h", "help")
       .default("o", "./")
@@ -84,6 +84,8 @@ constructContext = function(key, val, ctx, prefix, _) {
     console.log(util.format("ctrl+c to quit '%s'", key));
     rl.once("SIGINT", function() {
       more = false;
+      rl.write(null, {ctrl: true, name: "u"});
+      rl.write(null, {ctrl: true, name: "k"});
       rl.write("\n");
     });
     while (more) {
