@@ -14,7 +14,7 @@
 
 
 
-    argv = optimist.usage(("gen set file [-o output]\n" + "gen set --all [-o output_dir] [--exclude=regex]")).alias("o", "output").alias("h", "help").default("o", "./").describe("o", "A destination file/folder where you want to generate to.").describe("all", "Generate all files, excluding those specified by 'exclude'.").describe("exclude", "a regular expression pattern to exclude from generation.").argv;
+    argv = optimist.usage(("gen bundle file [-o output]\n" + "gen bundle --all [-o output_dir] [--exclude=regex]")).alias("o", "output").alias("h", "help").default("o", "./").describe("o", "A destination file/folder where you want to generate to.").describe("all", "Generate all files, excluding those specified by 'exclude'.").describe("exclude", "a regular expression pattern to exclude from generation.").argv;
     templates = { }; return (function __$main(_) { return (function __$main(_) {
 
 
@@ -57,7 +57,7 @@
 
 
             var __7 = !((argv._[0] in templates)); return (function __$main(__then) { if (__7) {
-                console.log(("Set '%s' does not exist in your current roots configuration.\n" + "Your current roots are:"), argv._[0]);
+                console.log(("Bundle '%s' does not exist in your current roots configuration.\n" + "Your current roots are:"), argv._[0]);
 
                 for (i = 0; (i < options.roots.length); i++) {
                   console.log(options.roots[i]); };

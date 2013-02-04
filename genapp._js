@@ -5,8 +5,8 @@ var fgen = require("fgen"),
     readline = require("readline"),
     optimist = require("optimist"),
     argv = optimist
-      .usage("gen set file [-o output]\n" +
-             "gen set --all [-o output_dir] [--exclude=regex]")
+      .usage("gen bundle file [-o output]\n" +
+             "gen bundle --all [-o output_dir] [--exclude=regex]")
       .alias("o", "output")
       .alias("h", "help")
       .default("o", "./")
@@ -54,9 +54,9 @@ options.roots.forEach_(_, function(_, root) {
     });
 });
 
-// Report set not found error if any.
+// Report bundle not found error if any.
 if (!(argv._[0] in templates)) {
-  console.log("Set '%s' does not exist in your current roots configuration.\n" +
+  console.log("Bundle '%s' does not exist in your current roots configuration.\n" +
               "Your current roots are:", argv._[0]);
   for (var i = 0; i < options.roots.length; i++) {
     console.log(options.roots[i]);
