@@ -116,7 +116,7 @@ constructContext = function(key, val, ctx, prefix, _) {
       ctx[key] = answer;
       break;
     case "number":
-      answer = question((prefix ? prefix + "> " : "") + key + "? (number)", _);
+      answer = question((prefix ? prefix + "> " : "") + key + "? (number) ", _);
       number = parseInt(answer);
       if (isNaN(number)) {
         console.log("It's not number.");
@@ -126,7 +126,7 @@ constructContext = function(key, val, ctx, prefix, _) {
       }
       break;
     case "boolean":
-      answer = question((prefix ? prefix + "> " : "") + key + "? (yes/no)", _).toLowerCase();
+      answer = question((prefix ? prefix + "> " : "") + key + "? (yes/no) ", _).toLowerCase();
       if (answer === "yes") {
         ctx[key] = true;
       } else if (answer === "no") {
