@@ -5,26 +5,26 @@ var fgen = require("fgen"),
     readline = require("readline"),
     optimist = require("optimist"),
     argv = optimist
-      .usage("gen bundle file [-o output]\n" +
-             "gen bundle --all [-o output_dir] [--exclude=regex]")
+      .usage("gen bundle [sub [sub...]] [-o DIR]\n\n" +
+             "EXAMPLES:\n" +
+             "gen node\n" +
+             "gen cs class")
       .alias("o", "output")
       .alias("h", "help")
       .default("o", "./")
-      .describe("o", "A destination file/folder where you want to generate to.")
-      .describe("all", "Generate all files, excluding those specified by 'exclude'.")
-      .describe("exclude", "a regular expression pattern to exclude from generation.")
+      .describe("o", "A destination folder where you want to generate to.")
       .argv,
-    homeDir, configFile, options, userOptions, templates = {}, gen, rl,
-    contextFile, context, realContext, question;
+    homeDir, configFile, options, userOptions, bundles = {}, gen, rl,
+    contextFolder, contextFile, context, realContext, question;
 
-if (argv.h || (argv.all && argv._.length !== 1) || (!argv.all && argv._.length !== 2)) {
+if (argv.h || (argv._.length < 1)) {
   optimist.showHelp();
   process.exit(1);
 }
 
 // Default options.
 options = {
-  roots: [path.join(__dirname, "templates")]
+  roots: [path.join(__dirname, "bundles")]
 };
 
 // Read and merge user config if any.
@@ -41,7 +41,7 @@ if (userOptions) {
     .concat(options.roots);
 }
 
-// Load bundles.
+// Determine bundles' root.
 options.roots.forEach_(_, function(_, root) {
   if (!fs.existsSync(root)) return;
 
@@ -50,12 +50,12 @@ options.roots.forEach_(_, function(_, root) {
       return fs.stat(path.join(root, file), _).isDirectory();
     })
     .forEach(function(folder) {
-      if (!(/^__/.test(folder) || (folder in templates))) templates[folder] = path.join(root, folder);
+      if (!(/^__/.test(folder) || (folder in bundles))) bundles[folder] = root;
     });
 });
 
 // Report bundle not found error if any.
-if (!(argv._[0] in templates)) {
+if (!(argv._[0] in bundles)) {
   if (/^__/.test(argv._[0])) {
     console.log("Bundle names cannot start with '__', please choose a different name.");
   } else {
@@ -68,7 +68,8 @@ if (!(argv._[0] in templates)) {
   process.exit(1);
 }
 
-contextFile = path.join(templates[argv._[0]], "..", argv._[0] + ".js");
+contextFolder = path.join(bundles[argv._[0]], argv._.join("/___/"));
+contextFile = path.join(contextFolder, "..", argv._[argv._.length - 1] + ".js");
 try {
   context = require(contextFile);
 } catch (ex) {
@@ -150,26 +151,14 @@ Object.keys(context.context).forEach_(_, function(_, key) {
   constructContext(key, context.context[key], realContext, null, _);
 });
 rl.close();
-context.postProcess(realContext, _);
+if (context.postProcess) context.postProcess(realContext, _);
 
 try {
-  if (argv.all) {
-    // Generate all files.
-    gen = fgen.createGenerator(templates[argv._[0]], _);
-    gen.context = realContext;
-    if (argv.exclude != null) {
-      gen.generateAll(argv.output, function(key) {
-        return !(new RegExp(argv.exclude)).test(key);
-      }, _);
-    } else {
-      gen.generateAll(argv.output, _);
-    }
-  } else {
-    // Generate single file.
-    gen = fgen.createGenerator(templates[argv._[0]], _);
-    gen.context = realContext;
-    gen.generate(argv._[1], argv.output, _);
-  }
+  gen = fgen.createGenerator(contextFolder, _);
+  gen.context = realContext;
+  gen.generateAll(argv.output, function(k) {
+    return !/^___(\/|\\)/.test(k);
+  }, _);
   console.log("done.");
 } catch (e) {
   console.log();
