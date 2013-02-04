@@ -3,7 +3,6 @@ var exec = require("child_process").exec;
 exports.context = {
   name: "",
   desc: "",
-  version: "",
   year: function() {
     return (new Date()).getFullYear();
   },
@@ -11,8 +10,8 @@ exports.context = {
     { keyword: "" }
   ],
   user: {
-    name: function() {},
-    email: function() {}
+    name: null,
+    email: null
   }
 };
 

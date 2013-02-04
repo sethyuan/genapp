@@ -1,6 +1,6 @@
 {
   "name": "{{name}}",
-  "version": "{{version}}",
+  "version": "0.0.0",
   "description": "{{desc}}",
   "main": "./lib/{{name}}.js",
   "scripts": {
@@ -27,5 +27,5 @@
     "node": ">=0.6"
   },
   "license": "MIT",
-  "readmeFilename": "README.md",
+  "readmeFilename": "README.md"
 }
