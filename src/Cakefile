@@ -1,0 +1,5 @@
+fs = require("fs")
+exec = require("child_process").exec
+
+task "compile", "compile all coffee files and move them to js folder", ->
+  exec("coffee -c -b . && _coffee -c *._coffee && cp *.js ../ && rm /f *.js")
