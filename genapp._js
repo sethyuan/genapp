@@ -69,11 +69,16 @@ if (!(argv._[0] in bundles)) {
 }
 
 contextFolder = path.join(bundles[argv._[0]], argv._.join("/___/"));
+if (!fs.existsSync(contextFolder)) {
+  console.log("Bundle '%s' does not exist in root '%s'.", argv._.join(" "), bundles[argv._[0]]);
+  process.exit(1);
+}
+
 contextFile = path.join(contextFolder, "..", argv._[argv._.length - 1] + ".js");
 try {
   context = require(contextFile);
 } catch (ex) {
-  console.log("Cannot read bundle '%s' context file.", argv._[0]);
+  console.log("Cannot read bundle '%s' context file.", argv._.join("/___/"));
   process.exit(1);
 }
 
