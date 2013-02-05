@@ -1,7 +1,7 @@
 {
   "name": "genapp",
   "version": "0.1.2",
-  "description": "Customizable generator application using fgen.",
+  "description": "A customizable generator application using fgen.",
   "preferGlobal": true,
   "bin": {
     "gen": "./genapp.js"
