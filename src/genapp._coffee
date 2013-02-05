@@ -77,14 +77,14 @@ contextFile = path.join(contextFolder, "..", argv._[argv._.length - 1] + ".js")
 try
   context = require(contextFile)
 catch e
-  console.log("Cannot read bundle '#{argv._.join("/___/")}' context file:\n
-              #{e}")
+  console.log("""Cannot read bundle '#{argv._.join("/___/")}' context file.\n
+              #{e}""")
   process.exit(1)
 
 question = (query, callback) ->
   rl.question(query, (answer) -> callback(null, answer))
 
-constructContext = (key, val, ctx, prefix = "", _) ->
+constructContext = (key, val, ctx, prefix, _) ->
   if Array.isArray(val)
     more = true
     ctx[key] = []
