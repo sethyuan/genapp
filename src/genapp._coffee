@@ -1,28 +1,34 @@
 #!/usr/bin/env node
 
-fgen = require("fgen")
-fs = require("fs")
-fs_ = require("./fs_.js")
-path = require("path")
-util = require("util")
-readline = require("readline")
-optimist = require("optimist")
+fgen = require "fgen"
+fs = require "fs"
+fs_ = require "./fs_.js"
+path = require "path"
+util = require "util"
+readline = require "readline"
+nomnom = require "nomnom"
 
-argv = optimist
-  .usage("""gen bundle [sub [sub...]] [-o DIR]
-         
-         EXAMPLES:
-         gen node
-         gen cs class""")
-  .alias("o", "output")
-  .alias("h", "help")
-  .default("o", "./")
-  .describe("o", "A destination folder where you want to generate to.")
-  .argv
-
-if argv.h || argv._.length < 1
-  optimist.showHelp()
-  process.exit(1)
+argv = nomnom
+  .script("gen")
+  .options
+    bundle:
+      position: 0
+      required: true
+      help: "Bundle used for generation"
+    sub:
+      position: 1
+      list: true
+      help: "Sub-bundles within bundle and sub-bundles"
+    output:
+      abbr: "o"
+      default: "./"
+      metavar: "DIR"
+      help: "A destination folder where you want to generate to"
+    version:
+      flag: true
+      callback: -> "genapp #{require("./package.json").version}"
+      help: "Show version"
+  .parse()
 
 # Default options.
 options =
