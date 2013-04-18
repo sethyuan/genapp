@@ -26,10 +26,16 @@ var argv = nomnom
       metavar: "DIR",
       help: "A destination folder where you want to generate to"
     },
+    list: {
+      abbr: "l",
+      flag: true,
+      help: "Lists sub-bundles of a bundle/sub-bundle"
+    },
     version: {
+      abbr: "V",
       flag: true,
       callback: function() {
-        return "genapp " + require("./package.json").version;
+        return "genapp " + require("../package.json").version;
       },
       help: "Show version"
     }
@@ -94,6 +100,21 @@ if (!fs_.exists(contextFolder, _)) {
   console.log("Bundle '%s' does not exist in root '%s'.",
     argv._.join(" "), bundles[bundle]);
   process.exit(1);
+}
+
+if (argv.list) {
+  var subroot = path.join(contextFolder, "___");
+  if (fs_.exists(subroot, _)) {
+    fs.readdir(subroot, _)
+      .filter_(_, -1, function(_, file) {
+        return fs.stat(path.join(subroot, file), _).isDirectory();
+      })
+      .forEach(function(folder) {
+        console.log(folder);
+      });
+  }
+  console.log();
+  process.exit(0);
 }
 
 var contextFile = path.join(contextFolder, "..", argv._[argv._.length - 1] + ".js");
