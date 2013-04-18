@@ -24,6 +24,11 @@ gen node
 gen node -o myproj
 ```
 
+To see a list of sub-bundles of the `node` bundle, you can do:
+```bash
+gen node -l
+```
+
 To generate sub-bundles of the `node` bundle, you can do:
 
 ```bash
