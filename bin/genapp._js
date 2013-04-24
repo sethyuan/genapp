@@ -177,9 +177,9 @@ var constructContext = function(key, val, ctx, prefix, _) {
       break;
     case "boolean":
       var answer = question(prefix + key + "? (yes/no) ", _).toLowerCase();
-      if (answer === "yes") {
+      if (answer === "yes" || answer === "y") {
         ctx[key] = true;
-      } else if (answer === "no") {
+      } else if (answer === "no" || answer === "n") {
         ctx[key] = false;
       } else {
         console.log("yes or no please.");
