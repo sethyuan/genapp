@@ -12,7 +12,6 @@ var argv = nomnom
   .options({
     bundle: {
       position: 0,
-      required: true,
       help: "Bundle used for generation"
     },
     sub: {
@@ -44,7 +43,7 @@ var argv = nomnom
 
 // Default options.
 var options = {
-  roots: [path.join(__dirname, "bundles")]
+  roots: [path.join(__dirname, "../bundles")]
 };
 
 var configFile = path.join(
@@ -68,21 +67,39 @@ options.roots.forEach_(_, function(_, root) {
   if (fs_.exists(root, _)) {
     return fs.readdir(root, _)
       .filter_(_, -1, function(_, file) {
-        return fs.stat(path.join(root, file), _).isDirectory();
+        return fs.stat(path.join(root, file), _).isDirectory() &&
+          file.charAt(0) !== "." &&
+          !/^__/.test(file);
       })
       .forEach(function(folder) {
-        if (!/^__/.test(folder) && !bundles[folder])
+        if (!bundles[folder])
           bundles[folder] = root;
       });
   }
 });
 
-var bundle = argv._[0];
+if (!argv.bundle && argv.list) {
+  Object.keys(bundles).forEach(function(bundle) {
+    console.log(bundle);
+  });
+  console.log();
+  process.exit(0);
+}
+
+// Check for bundle argument.
+if (!argv.bundle) {
+  console.log(nomnom.getUsage());
+  process.exit(1);
+}
+
+var bundle = argv.bundle;
 
 // Report bundle not found error if any.
 if (!bundles[bundle]) {
   if (/^__/.test(bundle)) {
     console.log("Bundle names cannot start with '__', please choose a different name.");
+  } else if (bundle.charAt(0) === ".") {
+    console.log("Bundle names cannot start with '.', please choose a different name.");
   } else {
     console.log("Bundle '%s' does not exist in your current roots configuration.\n\n" +
                 "Your current roots are:", bundle);
@@ -92,6 +109,18 @@ if (!bundles[bundle]) {
   }
   process.exit(1);
 }
+
+// Report sub-bundle not found error if any.
+argv._.forEach(function(bundle, i) {
+  if (i === 0) return;
+  if (/^__/.test(bundle)) {
+    console.log("Bundle names cannot start with '__', please choose a different name.");
+    process.exit(1);
+  } else if (bundle.charAt(0) === ".") {
+    console.log("Bundle names cannot start with '.', please choose a different name.");
+    process.exit(1);
+  }
+});
 
 var contextFolder = path.join(bundles[bundle], argv._.join("/___/"));
 
@@ -107,7 +136,9 @@ if (argv.list) {
   if (fs_.exists(subroot, _)) {
     fs.readdir(subroot, _)
       .filter_(_, -1, function(_, file) {
-        return fs.stat(path.join(subroot, file), _).isDirectory();
+        return fs.stat(path.join(subroot, file), _).isDirectory() &&
+          file.charAt(0) !== "." &&
+          !/^__/.test(file);
       })
       .forEach(function(folder) {
         console.log(folder);

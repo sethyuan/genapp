@@ -63,7 +63,7 @@ node
 
 This means, we have 2 bundles, a _csharp_ bundle and a _node_ bundle. Note that root folders are prioritized, those are placed on the top take precedence over those below them. And the built-in bundles' root is just appended to your roots, making bundles within it easily overridden by your own bundles. So, the _node_ bundle in _~/projects/templates/_ will override the built-in `node` bundle.
 
-> NOTE: Folders starting with double underscores are ignored by genapp, so folders with names like *__async* are not treated like bundles.
+> NOTE: Folders starting with a dot or double underscores are ignored by genapp, so folders with names like *__async* and *.git* are not treated like bundles.
 
 Within each bundle, you place all the templates that you want to generate. We use [mustache](http://mustache.github.com) based templates. A bundle can also contain sub-bundles, and sub-bundles can contain sub-bundles, and so on.
 

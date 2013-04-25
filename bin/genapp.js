@@ -39,12 +39,11 @@
 
 
 
-
-    argv = nomnom.script("gen").options({ bundle: { position: 0, required: true, help: "Bundle used for generation" }, sub: { position: 1, list: true, help: "Sub-bundles within bundle and sub-bundles" }, output: { abbr: "o", default: "./", metavar: "DIR", help: "A destination folder where you want to generate to" }, list: { abbr: "l", flag: true, help: "Lists sub-bundles of a bundle/sub-bundle" }, version: { abbr: "V", flag: true, callback: function() { return ("genapp " + require("../package.json").version); }, help: "Show version" } }).parse();
+    argv = nomnom.script("gen").options({ bundle: { position: 0, help: "Bundle used for generation" }, sub: { position: 1, list: true, help: "Sub-bundles within bundle and sub-bundles" }, output: { abbr: "o", default: "./", metavar: "DIR", help: "A destination folder where you want to generate to" }, list: { abbr: "l", flag: true, help: "Lists sub-bundles of a bundle/sub-bundle" }, version: { abbr: "V", flag: true, callback: function() { return ("genapp " + require("../package.json").version); }, help: "Show version" } }).parse();
 
 
     options = {
-      roots: [path.join(__dirname, "bundles"),] };
+      roots: [path.join(__dirname, "../bundles"),] };
 
 
     configFile = path.join((process.env.HOME || process.env.USERPROFILE), ".genappconfig");
@@ -53,9 +52,9 @@
 
 
 
-    return fs_.exists(configFile, __cb(_, __frame, 54, 4, function ___A(__0, __6) { return (function __$main(__then) { if (__6) {
+    return fs_.exists(configFile, __cb(_, __frame, 53, 4, function ___A(__0, __6) { return (function __$main(__then) { if (__6) {
 
-          return fs.readFile(configFile, "utf8", __cb(_, __frame, 56, 15, function ___A(__0, __7) { options.roots = JSON.parse(__7).roots.map(function(root) {
+          return fs.readFile(configFile, "utf8", __cb(_, __frame, 55, 15, function ___A(__0, __7) { options.roots = JSON.parse(__7).roots.map(function(root) {
 
               return root.replace(/^~/, (process.env.HOME || process.env.USERPROFILE));
 
@@ -64,7 +63,7 @@
 
 
         bundles = { };
-        return options.roots.forEach_(__cb(_, __frame, 65, 0, function __$main() {
+        return options.roots.forEach_(__cb(_, __frame, 64, 0, function __$main() {
 
 
 
@@ -77,26 +76,56 @@
 
 
 
-          bundle = argv._[0];
+
+
+          if ((!argv.bundle && argv.list)) {
+            Object.keys(bundles).forEach(function(bundle) {
+              console.log(bundle); });
+
+            console.log();
+            process.exit(0); } ;
+
+
+
+          if (!argv.bundle) {
+            console.log(nomnom.getUsage());
+            process.exit(1); } ;
+
+
+          bundle = argv.bundle;
 
 
           if (!bundles[bundle]) {
             if (/^__/.test(bundle)) {
-              console.log("Bundle names cannot start with '__', please choose a different name."); }
-             else {
-              console.log(("Bundle '%s' does not exist in your current roots configuration.\n\n" + "Your current roots are:"), bundle);
+              console.log("Bundle names cannot start with '__', please choose a different name."); } else {
+              if ((bundle.charAt(0) === ".")) {
+                console.log("Bundle names cannot start with '.', please choose a different name."); }
+               else {
+                console.log(("Bundle '%s' does not exist in your current roots configuration.\n\n" + "Your current roots are:"), bundle);
 
-              options.roots.forEach(function(root) {
-                console.log(root); }); } ;
+                options.roots.forEach(function(root) {
+                  console.log(root); }); } ; } ;
 
 
             process.exit(1); } ;
 
 
+
+          argv._.forEach(function(bundle, i) {
+            if ((i === 0)) { return };
+            if (/^__/.test(bundle)) {
+              console.log("Bundle names cannot start with '__', please choose a different name.");
+              process.exit(1); }
+             else if ((bundle.charAt(0) === ".")) {
+              console.log("Bundle names cannot start with '.', please choose a different name.");
+              process.exit(1); }  ; });
+
+
+
           contextFolder = path.join(bundles[bundle], argv._.join("/___/"));
 
 
-          return fs_.exists(contextFolder, __cb(_, __frame, 97, 5, function ___A(__0, __9) { var __8 = !__9; return (function __$main(__then) { if (__8) {
+          return fs_.exists(contextFolder, __cb(_, __frame, 126, 5, function ___A(__0, __9) { var __8 = !__9; return (function __$main(__then) { if (__8) {
                 console.log("Bundle '%s' does not exist in root '%s'.", argv._.join(" "), bundles[bundle]);
 
                 process.exit(1); __then(); } else { __then(); } ; })(function __$main() { return (function __$main(__then) {
@@ -104,13 +133,15 @@
 
                 if (argv.list) {
                   subroot = path.join(contextFolder, "___");
-                  return fs_.exists(subroot, __cb(_, __frame, 105, 6, function ___A(__0, __10) { return (function __$main(__then) { if (__10) {
-                        return fs.readdir(subroot, __cb(_, __frame, 106, 4, function ___A(__0, __11) {
-                          return __11.filter_(__cb(_, __frame, 107, 4, function ___A(__0, __12) { __12.forEach(function(folder) {
+                  return fs_.exists(subroot, __cb(_, __frame, 134, 6, function ___A(__0, __10) { return (function __$main(__then) { if (__10) {
+                        return fs.readdir(subroot, __cb(_, __frame, 135, 4, function ___A(__0, __11) {
+                          return __11.filter_(__cb(_, __frame, 136, 4, function ___A(__0, __12) { __12.forEach(function(folder) {
 
 
 
-                              console.log(folder); }); __then(); }, true), -1, function __2(_, file) { var __frame = { name: "__2", line: 108 }; return __func(_, this, arguments, __2, 0, __frame, function __$__2() { return fs.stat(path.join(subroot, file), __cb(_, __frame, 1, 15, function ___A(__0, __2) { var __1 = __2.isDirectory(); return _(null, __1); }, true)); }); }); }, true)); } else { __then(); } ; })(function __$main() {
+
+
+                              console.log(folder); }); __then(); }, true), -1, function __2(_, file) { var __frame = { name: "__2", line: 137 }; return __func(_, this, arguments, __2, 0, __frame, function __$__2() { return (function __$__2(_) { return (function __$__2(_) { return fs.stat(path.join(subroot, file), __cb(_, __frame, 1, 15, function ___A(__0, __3) { var __2 = __3.isDirectory(); var __4 = !__2; return (function __$__2(__then) { if (__4) { var __5 = __2; return _(null, __5); } else { __then(); } ; })(function __$__2() { return _(null, (file.charAt(0) !== ".")); }); }, true)); })(__cb(_, __frame, -136, 20, function ___A(__0, __1) { var __3 = !__1; return (function __$__2(__then) { if (__3) { var __4 = __1; return _(null, __4); } else { __then(); } ; })(function __$__2() { return _(null, !/^__/.test(file)); }); }, true)); })(__cb(_, __frame, -136, 20, function ___A(__0, __2) { return _(null, __2); }, true)); }); }); }, true)); } else { __then(); } ; })(function __$main() {
 
 
                       console.log();
@@ -132,7 +163,7 @@
                       rl.question(query, function(answer) { callback(null, answer); }); };
 
 
-                    constructContext = function constructContext__3(key, val, ctx, prefix, _) { var more, item, k, answer, number; var __frame = { name: "constructContext__3", line: 134 }; return __func(_, this, arguments, constructContext__3, 4, __frame, function __$constructContext__3() { return (function __$constructContext__3(__then) {
+                    constructContext = function constructContext__3(key, val, ctx, prefix, _) { var more, item, k, answer, number; var __frame = { name: "constructContext__3", line: 165 }; return __func(_, this, arguments, constructContext__3, 4, __frame, function __$constructContext__3() { return (function __$constructContext__3(__then) {
                           if (Array.isArray(val)) {
                             more = true;
                             ctx[key] = [];
@@ -197,19 +228,19 @@
 
                     realContext = { };
                     var __4 = __forIn(context.context); var __5 = 0; return (function ___A(__break) { var __more; var __loop = __cb(_, __frame, 0, 0, function __$main() { __more = false; var __21 = (__5 < __4.length); if (__21) { k = __4[__5++];
-                          return constructContext(k, context.context[k], realContext, "", __cb(_, __frame, 198, 2, function __$main() { while (__more) { __loop(); }; __more = true; }, true)); } else { __break(); } ; }); do { __loop(); } while (__more); __more = true; })(function __$main() {
+                          return constructContext(k, context.context[k], realContext, "", __cb(_, __frame, 229, 2, function __$main() { while (__more) { __loop(); }; __more = true; }, true)); } else { __break(); } ; }); do { __loop(); } while (__more); __more = true; })(function __$main() {
 
                       rl.close(); return (function __$main(__then) {
                         if ((typeof context.postProcess === "function")) {
-                          return context.postProcess(realContext, __cb(_, __frame, 202, 2, __then, true)); } else { __then(); } ; })(function __$main() { return (function ___A(__then) { (function ___A(_) { __tryCatch(_, function __$main() {
+                          return context.postProcess(realContext, __cb(_, __frame, 233, 2, __then, true)); } else { __then(); } ; })(function __$main() { return (function ___A(__then) { (function ___A(_) { __tryCatch(_, function __$main() {
 
 
-                              return fgen.createGenerator(contextFolder, __cb(_, __frame, 205, 12, function ___A(__0, __13) { gen = __13;
+                              return fgen.createGenerator(contextFolder, __cb(_, __frame, 236, 12, function ___A(__0, __13) { gen = __13;
                                 gen.context = realContext;
                                 return gen.generateAll(argv.output, function(k) {
-                                  return !/^___(\/|\\)/.test(k); }, __cb(_, __frame, 207, 2, function __$main() {
+                                  return !/^___(\/|\\)/.test(k); }, __cb(_, __frame, 238, 2, function __$main() {
 
                                   console.log("done."); __then(); }, true)); }, true)); }); })(function ___A(e, __result) { __tryCatch(_, function __$main() { if (e) {
 
                                 console.log();
-                                console.log(e.message); __then(); } else { _(null, __result); } ; }); }); })(function ___A() { __tryCatch(_, _); }); }); }); }); }); }); }); }, true)); }, true), function __1(_, root) { var __frame = { name: "__1", line: 66 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs_.exists(root, __cb(_, __frame, 1, 6, function ___A(__0, __2) { return (function __$__1(__then) { if (__2) { return fs.readdir(root, __cb(_, __frame, 2, 11, function ___A(__0, __4) { return __4.filter_(__cb(_, __frame, 3, 11, function ___A(__0, __5) { var __3 = __5.forEach(function(folder) { if ((!/^__/.test(folder) && !bundles[folder])) { bundles[folder] = root; }; }); return _(null, __3); }, true), -1, function __1(_, file) { var __frame = { name: "__1", line: 69 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs.stat(path.join(root, file), __cb(_, __frame, 1, 15, function ___A(__0, __2) { var __1 = __2.isDirectory(); return _(null, __1); }, true)); }); }); }, true)); } else { __then(); } ; })(_); }, true)); }); }); }); }, true)); });}).call(this, __trap);
+                                console.log(e.message); __then(); } else { _(null, __result); } ; }); }); })(function ___A() { __tryCatch(_, _); }); }); }); }); }); }); }); }, true)); }, true), function __1(_, root) { var __frame = { name: "__1", line: 65 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return fs_.exists(root, __cb(_, __frame, 1, 6, function ___A(__0, __2) { return (function __$__1(__then) { if (__2) { return fs.readdir(root, __cb(_, __frame, 2, 11, function ___A(__0, __4) { return __4.filter_(__cb(_, __frame, 3, 11, function ___A(__0, __5) { var __3 = __5.forEach(function(folder) { if (!bundles[folder]) { bundles[folder] = root; }; }); return _(null, __3); }, true), -1, function __1(_, file) { var __frame = { name: "__1", line: 68 }; return __func(_, this, arguments, __1, 0, __frame, function __$__1() { return (function __$__1(_) { return (function __$__1(_) { return fs.stat(path.join(root, file), __cb(_, __frame, 1, 15, function ___A(__0, __3) { var __2 = __3.isDirectory(); var __4 = !__2; return (function __$__1(__then) { if (__4) { var __5 = __2; return _(null, __5); } else { __then(); } ; })(function __$__1() { return _(null, (file.charAt(0) !== ".")); }); }, true)); })(__cb(_, __frame, -67, 20, function ___A(__0, __1) { var __3 = !__1; return (function __$__1(__then) { if (__3) { var __4 = __1; return _(null, __4); } else { __then(); } ; })(function __$__1() { return _(null, !/^__/.test(file)); }); }, true)); })(__cb(_, __frame, -67, 20, function ___A(__0, __2) { return _(null, __2); }, true)); }); }); }, true)); } else { __then(); } ; })(_); }, true)); }); }); }); }, true)); });}).call(this, __trap);
