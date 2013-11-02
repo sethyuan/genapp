@@ -235,7 +235,11 @@ if (typeof context.postProcess === "function")
   context.postProcess(realContext, _);
 
 try {
-  var gen = fgen.createGenerator(contextFolder, _);
+  var gen = (function(cb) {
+    fgen.createGenerator(contextFolder, function(generator) {
+      cb(null, generator);
+    });
+  })(_);
   gen.context = realContext;
   gen.generateAll(argv.output, function(k) {
     return !/^___(\/|\\)/.test(k);
